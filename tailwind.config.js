@@ -1,4 +1,6 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
+import { Inter, Inter as FontSans } from "next/font/google";
+
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
@@ -21,6 +23,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        inter: [Inter],
       },
       colors: {
         border: "hsl(var(--border))",
