@@ -36,10 +36,12 @@ const Page = async () => {
     <div className={"relative"}>
       {latestGames.map((image) => {
         return (
-          <img
+          <Image
             key={image.id}
             src={`https://${image?.cover?.url || ""}`}
             alt={image.name}
+            width={500}
+            height={500}
             className="w-[200px] h-[100px]"
           />
         );
