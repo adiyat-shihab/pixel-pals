@@ -4,6 +4,8 @@ import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import { cn } from "@/lib/utils";
 import SessionWrapper from "@/components/SessionWrapper";
+import StoreProvider from "@/app/StoreProvider";
+import QueryProvider from "@/app/QueryProvider";
 
 export const metadata = {
   title: "Create Next App",
@@ -24,7 +26,11 @@ export default function RootLayout({ children }) {
             fontSans.variable,
           )}
         >
-          <Theme>{children}</Theme>
+          <Theme>
+            <QueryProvider>
+              <StoreProvider>{children}</StoreProvider>
+            </QueryProvider>
+          </Theme>
         </body>
       </html>
     </SessionWrapper>

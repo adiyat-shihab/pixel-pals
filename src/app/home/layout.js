@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Layout = ({ children }) => {
   return (
-    <div className={"bg-[#121212] w-screen h-screen "}>
+    <div className={"bg-[#121212] "}>
       <Navbar />
       <div className={"px-60 py-7 flex items-center"}>
         <div className="relative text-gray-600 w-fit ">
@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
           </Link>
         </div>
       </div>
-      <div className={"px-60 py-7"}>{children}</div>
+      <div className={" py-7"}>{children}</div>
     </div>
   );
 };
