@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 
 const Navbar = () => {
   const { data } = useSession();
-  console.log(data);
   return (
     <div>
       <nav className="relative px-4 py-4 bg-[#18181C]  flex justify-between items-center ">

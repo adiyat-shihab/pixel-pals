@@ -8,7 +8,6 @@ const MainImage = ({ game_image, game_name, custom_style }) => {
       width={500}
       height={500}
       className={custom_style}
-      priority={true}
     />
   );
 };

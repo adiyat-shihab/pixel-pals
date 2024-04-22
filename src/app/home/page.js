@@ -2,20 +2,15 @@
 import { rawg } from "@/components/utils/rawg";
 import { Card, CardHeader } from "@/components/ui/card";
 import MainImage from "@/components/ui/MainImage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Skeleton } from "@radix-ui/themes";
-import Image from "next/image";
+import { useInView } from "react-intersection-observer";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
-  const {
-    data: games,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
+  const [gameLength, setGameLength] = useState(0);
+  const { ref, inView, entry } = useInView();
+  const { data: games, fetchNextPage } = useInfiniteQuery({
     queryKey: ["Games"],
     queryFn: rawg,
     initialPageParam: 1,
@@ -25,14 +20,23 @@ const Page = () => {
       return url.searchParams.get("page");
     },
   });
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchNextPage();
-    }, 2500); // 10000 milliseconds = 10 seconds
+    inView && fetchNextPage();
+  }, [inView]);
+  useEffect(() => {
+    const result = games?.pages?.reduceRight((accumulator, currentValue) =>
+      accumulator?.results?.concat(currentValue),
+    );
 
-    return () => clearInterval(interval);
-  }, []);
+    setGameLength(result?.length > 0 && result?.length);
+  }, [games?.pages]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     fetchNextPage();
+  //   }, 2500); // 10000 milliseconds = 10 seconds
+  //
+  //   return () => clearInterval(interval);
+  // }, []);
   // const fetchMore = () => {
   //   fetch(nextUrl)
   //     .then((res) => res.json())
@@ -43,12 +47,6 @@ const Page = () => {
   //     });
   // };
   return (
-    // <InfiniteScroll
-    //   next={fetchNextPage}
-    //   loader={"sss"}
-    //   dataLength={100}
-    //   hasMore={hasMore}
-    // >
     <div className={"text-white grid grid-cols-4 px-20 gap-y-9 "}>
       {!games ? (
         <div className={" w-full h-screen bg-[#121212]"}>
@@ -79,26 +77,30 @@ const Page = () => {
         </div>
       ) : (
         games?.pages?.map((page) =>
-          page.results.map((game) => {
+          page.results.map((game, idx) => {
+            console.log(idx % 20 === 0, idx);
             return (
-              <Card
-                key={game.id}
-                className={"w-fit border-neutral-800 bg-neutral-800 mx-auto  "}
-              >
-                <CardHeader className={"p-0 border-neutral-800  "}>
-                  <MainImage
-                    game_image={game?.background_image}
-                    game_name={game.name}
-                    custom_style={"object-cover rounded-lg h-48 w-[22rem]"}
-                  />
-                </CardHeader>
-              </Card>
+              <div key={game.id}>
+                {idx === 0 || (idx % 20 === 0 && <div ref={ref}></div>)}
+                <Card
+                  className={
+                    "w-fit border-neutral-800 bg-neutral-800 mx-auto  "
+                  }
+                >
+                  <CardHeader className={"p-0 border-neutral-800  "}>
+                    <MainImage
+                      game_image={game?.background_image}
+                      game_name={game.name}
+                      custom_style={"object-cover rounded-lg h-48 w-[22rem]"}
+                    />
+                  </CardHeader>
+                </Card>
+              </div>
             );
           }),
         )
       )}
     </div>
-    // </InfiniteScroll>
   );
 };
 
